@@ -1,0 +1,18 @@
+---
+title: "ESM 262 Assignment 1"
+author: "Sarah Hamilton"
+date: "2/7/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Paragraph 1: Why I am taking ESM 262
+
+I am taking ESM 262 because I want to refresh myself on computer science basics, such as loops, recursion, and data structures. I want to be more confident in my data analysis skills by having a stronger understanding of how functions I use day to day actually work, and therefore being able to use this knowledge to build my own functions and make my data analysis more efficient and catered to what I need to do. I am also hoping to just get more practice with using tools that I have already learned, such as GitHub collaboration and structuring Rmds in an organized way in R. 
+
+# Paragraph 2: My data science background
+
+I do not have a super strong data science background, but I have had exposure to multiple computing languages, such as Java through my high school computer science classes and C and MATLAB through my college research experiences. I then took ESM 206: Statistics and Data Analysis, and am now in ESM 244: Advanced Data Analysis. I also have a lot of experience using Excel for college coursework and research.   
