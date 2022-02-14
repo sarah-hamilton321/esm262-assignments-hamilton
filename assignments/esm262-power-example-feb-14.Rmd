@@ -1,0 +1,50 @@
+---
+title: "ESM 262 Feb 14 In Class Power Function Example"
+author: "Sarah Hamilton"
+date: "2/14/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(here)
+library(tidyverse)
+```
+
+Use `power_car_maintain.R` function to compute power for a given truck
+
+```{r}
+#source the function
+source(here("R/power_car_maintain.R"))
+
+#example 1: velocity = 30 m/s
+power_truck = power_car_maintain(mass = 31752, velocity = 30, area = 16)
+power_truck
+
+#mass = 31752 kg
+#velocity = 30 m/s, 80 km/hr, 120 km/hr, 40 km/hr, 5 km/hr
+#area = 16 m^2
+
+#convert velocities from km/hr to m/s: multiply by 1000/3600
+x = 1000/3600 #conversion factor from km/hr to m/s
+speeds = c(30, 80*x, 120*x, 40*x, 5*x)
+
+power_truck_heavy = power_car_maintain(mass = 31752, velocity = speeds, area = 16)
+
+power_truck_light = power_car_maintain(mass = 10000, velocity = speeds, area = 16)
+
+```
+
+```{r}
+df_power = data.frame(speeds, power_truck_heavy, power_truck_light)
+#plot the power results 
+ggplot(data = df_power) +
+  geom_line(aes(x = speeds, y = power_truck_heavy, color = 'heavy')) +
+  geom_line(aes(x = speeds, y = power_truck_light, color = 'light')) +
+  theme_minimal() +
+  labs(x = "Speed (m/s)", y = "Power (W)")
+```
+
+
+
