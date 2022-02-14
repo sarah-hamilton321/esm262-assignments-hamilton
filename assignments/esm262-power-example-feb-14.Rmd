@@ -36,6 +36,7 @@ power_truck_light = power_car_maintain(mass = 10000, velocity = speeds, area = 1
 
 ```
 
+Plot results of power for a heavy and a light truck.
 ```{r}
 df_power = data.frame(speeds, power_truck_heavy, power_truck_light)
 #plot the power results 
@@ -43,7 +44,7 @@ ggplot(data = df_power) +
   geom_line(aes(x = speeds, y = power_truck_heavy, color = 'heavy')) +
   geom_line(aes(x = speeds, y = power_truck_light, color = 'light')) +
   theme_minimal() +
-  labs(x = "Speed (m/s)", y = "Power (W)")
+  labs(x = "Velocity (m/s)", y = "Power (W)", title = "Power needed to maintain a given velocity for heavy and light trucks")
 ```
 
 
