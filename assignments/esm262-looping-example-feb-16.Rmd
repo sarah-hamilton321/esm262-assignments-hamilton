@@ -1,0 +1,72 @@
+---
+title: "ESM 262 Looping Example Feb 16"
+author: "Sarah Hamilton"
+date: "2/19/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Try this - make a random sample of fertilizer application, 10 values with mean of 5 and standard deviation of 0.5
+(user rnorm function in R to do this)
+```{r}
+fertilizer_ex = rnorm(mean = 5, sd = 0.5, n = 10)
+```
+
+
+Lets imagine that annual yield of a crop can be estimated follows:
+
+yield=1.8∗fertilizer^2−0.5∗fertilizer+0.3∗TP
+
+and TP is mean precipitation in cm
+
+Use a for loop to compute the total yield after 10 years
+
+- fertilizer is normally distributed with mean of 20 and standard deviation of 2
+- TP is 20cm
+
+```{r}
+fertilizer_2 = rnorm(mean = 20, sd = 2, n =10)
+tp_val = 20 
+
+yield_df <- data.frame(fertilizer = fertilizer_2, tp = tp_val, yield = NA)
+
+for (n in 1:10) {
+  yield_df$yield = 1.8*yield_df$fertilizer^2 - 0.5*yield_df$fertilizer + 0.3*yield_df$tp
+}
+
+yield_total = sum(yield_df$yield)
+```
+
+Now create a function to that takes as input a single value for annual fertilizer and annual total precipitation and returns yield
+
+```{r}
+yield_function = function(annual_fertilizer, annual_precip) {
+  yield_annual = 1.8*annual_fertilizer^2 - 0.5*annual_fertilizer + 0.3*annual_precip
+}
+
+#r = yield_function(10,20)
+```
+
+Now modify your function so that it returns total yield if the user inputs a vector of fertilizer and a vector of precipitation
+
+```{r}
+yield_function_vec = function(annual_fertilizer, annual_precip) {
+  yield_total = 0
+  for (n in length(annual_fertilizer)){
+      yield_total = yield_total + (1.8*annual_fertilizer[n]^2 - 0.5*annual_fertilizer[n] + 0.3*annual_precip[n])
+  }
+  return(yield_total)
+}
+
+test_fertilizer = c(10,20,30)
+test_precip = c(1,2,3)
+
+test_yield = yield_function_vec(test_fertilizer, test_precip)
+```
+
+
+Check that function returns the same result as your original for loop Add some error checking and test
+

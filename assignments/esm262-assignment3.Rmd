@@ -1,0 +1,146 @@
+---
+title: "ESM 262 Assignment 3"
+author: "Sarah Hamilton"
+date: "2/19/2022"
+output: html_document
+---
+
+# Calculating power using three different methods
+
+```{r setup, include=TRUE, warning = FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+library(purrr)
+library(ggpubr)
+library(kableExtra)
+```
+```{r}
+# source the autopower function
+source("../R/autopower.R")
+
+possible_cars = data.frame(name = c("A","B","C","D"),mass=c(5000,10000,65000,38000), area = c(10,22,30,22))
+
+```
+
+# Method 1: By hand
+
+```{r}
+# generate a lognormal distritbution of speeds, mean of 100 km/hr and st. dev. of 10 km/hr
+nsample = 200
+mean_speed = log(100*0.277)
+
+speeds = rlnorm(mean=mean_speed, sd=0.1*mean_speed, nsample)
+summary(speeds)
+
+plot(density(speeds), ylab="Distribution of Speeds in (m/s)")
+
+
+# Run each car for all speeds 
+
+powerA = autopower(V = speeds, A = possible_cars$area[1], m = possible_cars$mass[1])
+powerB = autopower(V = speeds, A = possible_cars$area[2], m = possible_cars$mass[2])
+powerC = autopower(V = speeds, A = possible_cars$area[3], m = possible_cars$mass[3])
+powerD = autopower(V = speeds, A = possible_cars$area[4], m = possible_cars$mass[4])
+
+# Put outputs into a data frame
+powerall1 = cbind.data.frame(powerA, powerB, powerC, powerD)
+colnames(powerall1)=possible_cars$name
+
+# compare powerall1 and powerallr1 to see what pivot_longer does
+powerallr1 = powerall1 %>% pivot_longer(cols=everything(), names_to="car", values_to="power")
+#head(powerallr1)
+
+# quick visualization
+# lets save it so that we can compare
+method1_plot = ggplot(data = powerallr1, aes(x = car, y = power, fill = car)) + 
+  geom_boxplot()+ 
+  labs(title = "By Hand")
+#method1_plot
+
+```
+
+# Method 2: Using `pmap()` from `purrr` package:
+
+```{r}
+# continue using possible_cars and speeds from above
+# use pmap to apply function to the data
+powerall2 = pmap(list(A = possible_cars$area, m = possible_cars$mass), autopower, V = speeds)
+
+# convert to a data frame
+powerall2_df = as.data.frame(powerall2, col.names = possible_cars$name)
+
+colnames(powerall2_df) = possible_cars$name
+
+#head(powerall2_df)
+
+powerall2_df_long = powerall2_df %>%
+  pivot_longer(cols = everything(), names_to = "car", values_to = "power")
+
+head(powerall2_df_long)
+
+# visualize it
+method2_plot = ggplot(data = powerall2_df_long, aes(x = car, y = power, fill = car)) +
+  geom_boxplot() +
+  labs(title = "pmap")
+
+#method2_plot
+
+#ggarrange(method1_plot, method2_plot)
+```
+
+# Method 3: Using `for` loop
+
+```{r}
+# continue using possible_cars and speeds from above
+# create a data frame to store results
+
+powerall3 = as.data.frame(matrix(nrow = length(speeds), ncol = nrow(possible_cars)))
+#head(powerall3)
+
+# for loop
+for (i in 1:nrow(possible_cars)) {
+  powerall3[,i] = autopower(A = possible_cars$area[i], m = possible_cars$mass[i], V = speeds)
+}
+
+colnames(powerall3) = possible_cars$name
+head(powerall3)
+
+powerall3_long = powerall3 %>% pivot_longer(cols = everything(), names_to = "car", values_to = "power")
+#head(powerallr3)
+
+# visualizes the results
+method3_plot = ggplot(data = powerall3_long, aes(x = car, y = power, fill = car)) + 
+  geom_boxplot() + 
+  labs(title= "For Loop")
+
+means_1 <- powerall1 %>% map(mean)
+means_2 <- powerall2_df %>% map(mean)
+means_3 <- powerall3 %>% map(mean)
+
+
+```
+
+**Table 1:** Results from three methods of calculating power
+```{r}
+do.call(rbind, Map(data.frame, Method1 = means_1, Method2 = means_2, Method3 = means_3)) %>%
+  kable() %>%
+  kable_styling(full_width = FALSE)
+
+```
+
+```{r}
+ggarrange(method1_plot, method2_plot, method3_plot, nrow=3)
+```
+**Figure 1:** Results from three methods of calculating power
+
+
+
+
+
+
+
+
+
+
+
