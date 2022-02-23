@@ -38,5 +38,6 @@ age_df2 <- as.data.frame(age_df2, col.names = Ro_vals, row.names = as.character(
 
 age_df2_long <- age_df2 %>%
   pivot_longer(cols = everything(), names_to = "Ro", values_to = "Age")
+#need to figure out how to get p values into a column 
 ```
 
