@@ -19,7 +19,7 @@ source("~/Desktop/Bren Winter 2022/ESM 262/esm262-assignments-hamilton/R/infecti
 
 #generate random values for p and Ro 
 p_vals <- seq(from = 0, to = 1, by= 0.05)
-Ro_vals <- runif(21, min = 0, max = 100)
+Ro_vals <- round(runif(21, min = 0, max = 100),1)
 
 #make a data frame to store results 
 
@@ -34,10 +34,34 @@ for (i in 1:length(p_vals)){
 
 #use purrr package to calculate age values
 age_df2 <- pmap(list(Ro_vals), infection_age, l = 79, p = p_vals)
-age_df2 <- as.data.frame(age_df2, col.names = Ro_vals, row.names = as.character(p_vals))
+age_df2 <- as.data.frame(age_df2, col.names = Ro_vals, row.names = as.character(p_vals)) %>%
+  tibble::rownames_to_column(., "P")
 
 age_df2_long <- age_df2 %>%
-  pivot_longer(cols = everything(), names_to = "Ro", values_to = "Age")
+  pivot_longer(cols = starts_with("X"), names_to = "Ro", values_to = "Age") %>%
+  mutate(Ro = gsub("X", "", Ro))
+
+age_plot = ggplot(age_df2_long, aes(x = P, y = Age)) +
+  geom_point(aes(color = Ro)) +
+  labs(x = "% of Vaccinated Individuals (P)",
+       y = "Average Age of Infection (years)",
+       caption = "Figure 1. Average age of infection of a virus versus the percentage of vaccinated individuals (P).") +
+  theme_minimal()
+
+age_plot
 #need to figure out how to get p values into a column 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
