@@ -39,5 +39,9 @@ catches = round(runif(min=3, max=400, n=ndays))
 # now for each fishing day (and its number of fish caught) - use sample to generate the fish
 catches_res = list(catches) %>% pmap(sample, x=possible.fish, replace=TRUE)
 # look at the sample catches
+
+fish_function(catches_res[[1]])
+
+res = catches_res %>% map_df(fish_function) #????? use map_df somehow
 ```
 

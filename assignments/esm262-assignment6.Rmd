@@ -1,0 +1,45 @@
+---
+title: "ESM 262 Assignment 6"
+author: "Sarah Hamilton"
+date: "3/2/2022"
+output: html_document
+---
+
+Code to test extreme temperature risk function
+
+Assignment:
+Create a function that computes a level of risk associated with a extreme temperature events.
+
+You can decide who/what the risk is to - for example risk of heat related illness for urban dwellers, or risk of heat related mortality for a particular type of tree
+
+You function should take as input daily temperature data - from this data you should estimate how often extremes occur -
+
+What is an extreme temperature? you should include a threshold to define extremes as one of the input parameters. You can be flexible here - if you want you can think of extremes as only occurring when you have temperature above a threshold for a sequence several days (and the number of days would be another parameter) or something simpler - just any temperature above a threshold; if you want you could have different thresholds to define different “severity” of extremes.
+
+What is risk? You will develop the equation for risk on your own! Be creative here - what might make sense? how might temperature extremes translate into risk; would it be a linear equation- something else? What might be some of the parameters that influence risk (incomes, tree species, age? (include at least two parameters) How many categories of risk will you have
+
+Have your function return both the risk associated with the input temperature sequence AND then number of extremes
+
+Code your function in R Make sure you document well
+
+Create an Rmarkdown to demonstrate the use of your function with tmax.txt - which is under Data on ESM_262_Examples
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(purrr)
+```
+
+```{r}
+# source("~/Desktop/Bren Winter 2022/ESM 262/esm262-assignments-hamilton/R/temp_risk_score.R")
+
+daily_temp <- read.table(file = "~/Desktop/Bren Winter 2022/ESM 262/esm262-assignments-hamilton/data/tmax.txt") %>%
+  as.data.frame() %>%
+  janitor::row_to_names(row_number = 1)
+
+temp_vec <- as.double(daily_temp$tmax)
+
+temp_results <- temp_risk_score(temp_vec)
+```
+
