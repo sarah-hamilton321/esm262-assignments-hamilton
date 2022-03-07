@@ -7,23 +7,6 @@ output: html_document
 
 Code to test extreme temperature risk function
 
-Assignment:
-Create a function that computes a level of risk associated with a extreme temperature events.
-
-You can decide who/what the risk is to - for example risk of heat related illness for urban dwellers, or risk of heat related mortality for a particular type of tree
-
-You function should take as input daily temperature data - from this data you should estimate how often extremes occur -
-
-What is an extreme temperature? you should include a threshold to define extremes as one of the input parameters. You can be flexible here - if you want you can think of extremes as only occurring when you have temperature above a threshold for a sequence several days (and the number of days would be another parameter) or something simpler - just any temperature above a threshold; if you want you could have different thresholds to define different “severity” of extremes.
-
-What is risk? You will develop the equation for risk on your own! Be creative here - what might make sense? how might temperature extremes translate into risk; would it be a linear equation- something else? What might be some of the parameters that influence risk (incomes, tree species, age? (include at least two parameters) How many categories of risk will you have
-
-Have your function return both the risk associated with the input temperature sequence AND then number of extremes
-
-Code your function in R Make sure you document well
-
-Create an Rmarkdown to demonstrate the use of your function with tmax.txt - which is under Data on ESM_262_Examples
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -32,14 +15,22 @@ library(purrr)
 ```
 
 ```{r}
-# source("~/Desktop/Bren Winter 2022/ESM 262/esm262-assignments-hamilton/R/temp_risk_score.R")
+#source the function
+source("~/Desktop/Bren Winter 2022/ESM 262/esm262-assignments-hamilton/R/temp_risk_score.R")
 
+#read in the temperature data, make it a data frame, make the first row the column names
 daily_temp <- read.table(file = "~/Desktop/Bren Winter 2022/ESM 262/esm262-assignments-hamilton/data/tmax.txt") %>%
   as.data.frame() %>%
   janitor::row_to_names(row_number = 1)
 
+#extract vector of temperatures
 temp_vec <- as.double(daily_temp$tmax)
 
-temp_results <- temp_risk_score(temp_vec)
+#run risk function on temperature vector
+temp_results <- temp_risk_score(temp_vec, age = 50, temp_ideal = 25) #default values: age = 150, temp_ideal = 20, highest_threshold = 38, medium_threshold = 32
 ```
 
+**Function Results for Risk of Heat to Pine Trees**
+Risk Level: `r temp_results[1]`
+Number of High Extreme Temperatures: `r temp_results[2]`
+Number of Moderate Extreme Temperatures: `r temp_results[3]`
